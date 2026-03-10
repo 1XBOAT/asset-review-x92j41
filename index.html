@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { background-color: white; font-family: sans-serif; margin: 20px; overflow: hidden; }
+        
+        /* The specific text style you wanted */
+        .warning-text { font-weight: bold; text-decoration: underline; color: black; }
+
+        /* The Loading Spinner */
+        #loader {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            border: 8px solid #f3f3f3; border-top: 8px solid #3498db;
+            border-radius: 50%; width: 60px; height: 60px; animation: spin 2s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Termination Screen */
+        #terminated { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 1000; padding: 50px; }
+    </style>
+</head>
+<body>
+
+    <div id="content">
+        <p>Doing so will result in you being <span class="warning-text">terminated from the study.</span> We appreciate your understanding.</p>
+        
+        <div id="loader"></div>
+
+        <!-- Replace 'YOUR_VIDEO_ID' with your actual YouTube or Vimeo ID -->
+        <iframe id="video" width="560" height="315" src="https://www.youtube.com" frameborder="0" style="display:none;"></iframe>
+    </div>
+
+    <div id="terminated">
+        <h1>ACCESS REVOKED</h1>
+        <p>You have been terminated from the study for clicking outside the window or using unauthorized keys.</p>
+    </div>
+
+    <script>
+        // Hide loader and show video after 3 seconds
+        setTimeout(() => {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('video').style.display = 'block';
+        }, 3000);
+
+        // THE "KICK OUT" FUNCTIONS
+        function terminate() {
+            document.getElementById('content').style.display = 'none';
+            document.getElementById('terminated').style.display = 'block';
+        }
+
+        // 1. Detect clicking outside the window
+        window.onblur = terminate;
+
+        // 2. Detect keyboard use
+        window.onkeydown = function(e) {
+            terminate();
+            return false; 
+        };
+    </script>
+</body>
+</html>
