@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Survey</title>
+    <title>SECURE_ASSET_REVIEW_SESSION</title>
     <style>
-        /* Exact White Background/Black Text Style */
-        body { background-color: white; color: black; font-family: Arial, sans-serif; margin: 0; padding: 40px; }
+        /* Matches your Canva/Image style exactly */
+        body { background-color: white; color: black; font-family: Arial, sans-serif; margin: 0; padding: 40px; overflow-x: hidden; }
         
         .header-text { font-size: 18px; line-height: 1.6; max-width: 900px; margin-bottom: 20px; }
         .warning-text { font-weight: bold; text-decoration: underline; }
 
-        /* The Loading Spinner */
+        /* The blue/gray loading circle */
         #loader-container { display: none; flex-direction: column; align-items: center; margin: 50px 0; }
         .spinner {
             border: 10px solid #f3f3f3; border-top: 10px solid #2d5da7;
@@ -19,12 +19,11 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* Video Container - Centered below text */
-        #video-container { display: none; width: 100%; text-align: center; margin-top: 20px; position: relative; }
+        #video-container { display: none; width: 100%; text-align: center; margin-top: 20px; }
         video { width: 95%; max-width: 1000px; box-shadow: 0px 10px 30px rgba(0,0,0,0.2); background: black; }
 
-        /* Action Buttons */
+        /* The "Begin" button to trigger the study */
         #start-btn { padding: 15px 30px; font-size: 18px; cursor: pointer; border: 1px solid #ccc; background: #eee; border-radius: 5px; }
-        #unmute-btn { display: none; position: absolute; top: 20px; right: 40px; padding: 10px; background: rgba(0,0,0,0.6); color: white; border: none; cursor: pointer; font-weight: bold; }
 
         /* Termination Screen */
         #terminated { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10000; text-align: center; padding-top: 15%; }
@@ -45,10 +44,9 @@
         </div>
 
         <div id="video-container">
-            <button id="unmute-btn" onclick="unmute()">CLICK TO ENABLE AUDIO</button>
-            <!-- Muted/Playsinline added to force playback -->
-            <video id="Timeline 1.mp4" muted playsinline>
-                <source src="Timeline 1.mp4" type="video/mp4">
+            <!-- Muted/Playsinline ensures it plays without a second click -->
+            <video id="v" muted playsinline>
+                <source src="Timeline%201.mp4" type="video/mp4">
             </video>
         </div>
     </div>
@@ -66,23 +64,17 @@
             document.getElementById('start-btn').style.display = 'none';
             document.getElementById('loader-container').style.display = 'flex';
 
-            // 4 Second delay for the "loading" effect
+            // Loading delay
             setTimeout(() => {
                 document.getElementById('loader-container').style.display = 'none';
                 document.getElementById('video-container').style.display = 'block';
-                document.getElementById('unmute-btn').style.display = 'block';
                 
-                // Force play
-                video.play().catch(e => console.log("Playback blocked:", e));
+                // Plays instantly (muted)
+                video.play().catch(e => console.log("Playback error:", e));
 
-                // Wait 1 second before enabling the "Kick Out" security
+                // Enables security 1 second after video starts
                 setTimeout(enableSecurity, 1000);
             }, 4000);
-        }
-
-        function unmute() {
-            video.muted = false;
-            document.getElementById('unmute-btn').style.display = 'none';
         }
 
         function terminate() {
@@ -92,13 +84,11 @@
         }
 
         function enableSecurity() {
-            // Kick out on tab switch or clicking away
             window.onblur = terminate;
-            // Kick out on any keypress
             window.onkeydown = terminate;
-            // Kick out on mouse movement
             window.onmousemove = function(e) {
-                if (Math.abs(e.movementX) > 5 || Math.abs(e.movementY) > 5) terminate();
+                // Allows very minor mouse jitter so they aren't kicked instantly
+                if (Math.abs(e.movementX) > 8 || Math.abs(e.movementY) > 8) terminate();
             };
         }
     </script>
