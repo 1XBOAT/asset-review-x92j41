@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SECURE_ASSET_REVIEW_v9</title>
+    <title>Survey</title>
     <style>
-        /* White background and black text as seen in your image */
-        body { background-color: white; color: black; font-family: sans-serif; margin: 0; padding: 40px; overflow-x: hidden; }
-
-        /* The exact formatting: bold and underlined */
-        .header-text { font-size: 18px; line-height: 1.6; max-width: 1000px; margin-bottom: 30px; }
+        /* Exact White Background/Black Text Style */
+        body { background-color: white; color: black; font-family: Arial, sans-serif; margin: 0; padding: 40px; }
+        
+        .header-text { font-size: 18px; line-height: 1.6; max-width: 900px; margin-bottom: 20px; }
         .warning-text { font-weight: bold; text-decoration: underline; }
 
-        /* The loading circle container */
-        #loader-container { display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
+        /* The Loading Spinner */
+        #loader-container { display: none; flex-direction: column; align-items: center; margin: 50px 0; }
         .spinner {
-            border: 10px solid #f3f3f3;
-            border-top: 10px solid #2d5da7;
+            border: 10px solid #f3f3f3; border-top: 10px solid #2d5da7;
             border-radius: 50%; width: 60px; height: 60px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* The Video Player - centered below the text */
-        #video-container { display: none; width: 100%; text-align: center; }
-        video { width: 90%; max-width: 1000px; box-shadow: 0px 4px 15px rgba(0,0,0,0.3); }
+        /* Video Container - Centered below text */
+        #video-container { display: none; width: 100%; text-align: center; margin-top: 20px; position: relative; }
+        video { width: 95%; max-width: 1000px; box-shadow: 0px 10px 30px rgba(0,0,0,0.2); background: black; }
+
+        /* Action Buttons */
+        #start-btn { padding: 15px 30px; font-size: 18px; cursor: pointer; border: 1px solid #ccc; background: #eee; border-radius: 5px; }
+        #unmute-btn { display: none; position: absolute; top: 20px; right: 40px; padding: 10px; background: rgba(0,0,0,0.6); color: white; border: none; cursor: pointer; font-weight: bold; }
 
         /* Termination Screen */
         #terminated { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10000; text-align: center; padding-top: 15%; }
@@ -35,42 +37,52 @@
             For security reasons, once the video starts playing <span class="warning-text">please do not use the keyboard, mouse, or click outside of this window. Doing so will result in you being terminated from the study.</span> We appreciate your understanding.
         </div>
 
-        <!-- Start Button (Needed for sound to work) -->
-        <button id="start-btn" style="padding: 10px 20px; cursor: pointer; border: 1px solid #ccc; background: #eee;" onclick="startSession()">BEGIN SESSION</button>
+        <button id="start-btn" onclick="startSession()">BEGIN SECURE SESSION</button>
 
-        <div id="loader-container" style="display: none;">
+        <div id="loader-container">
             <div class="spinner"></div>
-            <p>INITIALIZING SECURE FEED...</p>
+            <p>ESTABLISHING SECURE FEED...</p>
         </div>
 
         <div id="video-container">
-            <!-- REMAINS ON SCREEN WITH TEXT ABOVE -->
-            <video id="Timeline 1.mp4">
-                <source src="Timeline 1.mp4" type="video/mp4">
+            <button id="unmute-btn" onclick="unmute()">CLICK TO ENABLE AUDIO</button>
+            <!-- Muted/Playsinline added to force playback -->
+            <video id="v" muted playsinline>
+                <source src="Timeline%201.mp4" type="video/mp4">
             </video>
         </div>
     </div>
 
     <div id="terminated">
-        <h1 style="color: red;">SESSION TERMINATED</h1>
-        <p>Security violation: Unauthorized input or focus change detected.</p>
+        <h1 style="color: red; font-size: 3em;">SESSION TERMINATED</h1>
+        <p>Unauthorized activity or window focus change detected.</p>
+        <p>Access has been revoked.</p>
     </div>
 
     <script>
-        const video = document.getElementById('myVideo');
+        const video = document.getElementById('v');
 
         function startSession() {
             document.getElementById('start-btn').style.display = 'none';
             document.getElementById('loader-container').style.display = 'flex';
 
+            // 4 Second delay for the "loading" effect
             setTimeout(() => {
                 document.getElementById('loader-container').style.display = 'none';
                 document.getElementById('video-container').style.display = 'block';
-                video.play();
+                document.getElementById('unmute-btn').style.display = 'block';
                 
-                // Security activates 1 second after video starts
+                // Force play
+                video.play().catch(e => console.log("Playback blocked:", e));
+
+                // Wait 1 second before enabling the "Kick Out" security
                 setTimeout(enableSecurity, 1000);
-            }, 3000);
+            }, 4000);
+        }
+
+        function unmute() {
+            video.muted = false;
+            document.getElementById('unmute-btn').style.display = 'none';
         }
 
         function terminate() {
@@ -80,8 +92,11 @@
         }
 
         function enableSecurity() {
+            // Kick out on tab switch or clicking away
             window.onblur = terminate;
+            // Kick out on any keypress
             window.onkeydown = terminate;
+            // Kick out on mouse movement
             window.onmousemove = function(e) {
                 if (Math.abs(e.movementX) > 5 || Math.abs(e.movementY) > 5) terminate();
             };
@@ -89,4 +104,3 @@
     </script>
 </body>
 </html>
-
