@@ -13,7 +13,6 @@ body {
     padding: 40px;
 }
 
-/* TEXT — now matches your screenshot */
 .header-text {
     font-size: 18px;
     line-height: 1.6;
@@ -26,7 +25,6 @@ body {
     text-decoration: underline;
 }
 
-/* Button */
 #start-btn {
     padding: 15px 30px;
     font-size: 18px;
@@ -61,7 +59,6 @@ body {
 /* Video */
 #video-container {
     display: none;
-    width: 100%;
     text-align: center;
     margin-top: 20px;
 }
@@ -106,8 +103,8 @@ video {
     </div>
 
     <div id="video-container">
-        <video id="Timeline 1.mp4" playsinline>
-            <source src="Timeline 1.mp4" type="video/mp4">
+        <video id="video" playsinline>
+            <source src="timeline1.mp4" type="video/mp4">
         </video>
     </div>
 
@@ -131,12 +128,17 @@ startBtn.addEventListener("click", () => {
     startBtn.style.display = "none";
     loader.style.display = "flex";
 
+    // 🔥 Start video IMMEDIATELY (muted so Chrome allows it)
+    video.muted = true;
+    video.play().catch(err => console.log(err));
+
+    // Then show UI after delay
     setTimeout(() => {
         loader.style.display = "none";
         videoContainer.style.display = "block";
 
+        // 🔊 Turn sound ON after it started
         video.muted = false;
-        video.play().catch(err => console.log(err));
 
         enableSecurity();
     }, 2500);
