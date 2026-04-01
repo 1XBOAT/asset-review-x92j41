@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SECURE ASSET REVIEW SESSION</title>
+<title>Survey</title>
 
 <style>
 body {
@@ -70,7 +70,7 @@ video {
     box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
 }
 
-/* Termination screen */
+/* Termination */
 #terminated {
     display: none;
     position: fixed;
@@ -91,8 +91,7 @@ video {
 
     <div class="header-text">
         For security reasons, once the video starts playing 
-        <span class="warning-text">please remain on this page and do not switch tabs or leave the window.</span> 
-        Doing so may terminate your session.
+        <span class="warning-text">please remain on this page and do not switch tabs or leave the window.</span>
     </div>
 
     <button id="start-btn">BEGIN SECURE SESSION</button>
@@ -105,7 +104,6 @@ video {
     <div id="video-container">
         <video id="video" playsinline>
             <source src="timeline1.mp4" type="video/mp4">
-            Your browser does not support the video tag.
         </video>
     </div>
 
@@ -125,38 +123,27 @@ const loaderText = document.getElementById("loader-text");
 
 startBtn.addEventListener("click", () => {
 
-    // Hide button, show loader
     startBtn.style.display = "none";
     loader.style.display = "flex";
 
-    // Simulated loading delay
     setTimeout(() => {
-
         loader.style.display = "none";
         videoContainer.style.display = "block";
 
-        // Enable sound
         video.muted = false;
 
-        // Play video
-        video.play().catch(err => {
-            console.log("Playback error:", err);
-        });
+        video.play().catch(err => console.log(err));
 
         enableSecurity();
-
     }, 2500);
 });
 
-// When video ends → show loader again
 video.addEventListener("ended", () => {
-
     videoContainer.style.display = "none";
 
     loaderText.innerText = "Finalizing secure session...";
     loader.style.display = "flex";
 
-    // Optional: end session after a few seconds
     setTimeout(() => {
         terminate();
     }, 4000);
@@ -169,10 +156,7 @@ function terminate() {
 }
 
 function enableSecurity() {
-    // Only terminate if user leaves tab
     window.addEventListener("blur", terminate);
-
-    // Prevent right click (optional realism)
     document.addEventListener("contextmenu", e => e.preventDefault());
 }
 </script>
