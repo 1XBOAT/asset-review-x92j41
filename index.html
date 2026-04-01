@@ -1,49 +1,18 @@
-<script>
-const startBtn = document.getElementById("start-btn");
-const loader = document.getElementById("loader-container");
-const videoContainer = document.getElementById("video-container");
-const video = document.getElementById("video");
-const loaderText = document.getElementById("loader-text");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Test Page</title>
+</head>
 
-startBtn.addEventListener("click", () => {
+<body>
 
-    startBtn.style.display = "none";
+<h1>Site is working</h1>
+<p>If you see this, your HTML is fine.</p>
 
-    // Show video immediately (so playback is valid)
-    videoContainer.style.display = "block";
+<video controls width="600">
+    <source src="timeline1.mp4" type="video/mp4">
+</video>
 
-    // 🔊 Play WITH SOUND (allowed because it's inside click)
-    video.play().catch(err => console.log(err));
-
-    // Show loader ON TOP
-    loader.style.display = "flex";
-
-    // After delay, hide loader so it "reveals" video
-    setTimeout(() => {
-        loader.style.display = "none";
-        enableSecurity();
-    }, 2500);
-});
-
-video.addEventListener("ended", () => {
-    videoContainer.style.display = "none";
-
-    loaderText.innerText = "FINALIZING SECURE SESSION...";
-    loader.style.display = "flex";
-
-    setTimeout(() => {
-        terminate();
-    }, 4000);
-});
-
-function terminate() {
-    video.pause();
-    document.getElementById("main-content").style.display = "none";
-    document.getElementById("terminated").style.display = "block";
-}
-
-function enableSecurity() {
-    window.addEventListener("blur", terminate);
-    document.addEventListener("contextmenu", e => e.preventDefault());
-}
-</script>
+</body>
+</html>
