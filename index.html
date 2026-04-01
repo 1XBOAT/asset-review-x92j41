@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Survey</title>
+<title>SECURE ASSET REVIEW SESSION</title>
 
 <style>
 body {
@@ -11,14 +11,14 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 40px;
-    text-align: center;
 }
 
+/* TEXT — now matches your screenshot */
 .header-text {
     font-size: 18px;
     line-height: 1.6;
     max-width: 900px;
-    margin: 0 auto 20px;
+    margin-bottom: 20px;
 }
 
 .warning-text {
@@ -26,6 +26,7 @@ body {
     text-decoration: underline;
 }
 
+/* Button */
 #start-btn {
     padding: 15px 30px;
     font-size: 18px;
@@ -40,7 +41,7 @@ body {
     display: none;
     flex-direction: column;
     align-items: center;
-    margin-top: 40px;
+    margin-top: 50px;
 }
 
 .spinner {
@@ -60,7 +61,9 @@ body {
 /* Video */
 #video-container {
     display: none;
-    margin-top: 30px;
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
 }
 
 video {
@@ -91,19 +94,20 @@ video {
 
     <div class="header-text">
         For security reasons, once the video starts playing 
-        <span class="warning-text">please remain on this page and do not switch tabs or leave the window.</span>
+        <span class="warning-text">please do not use the keyboard, mouse, or click outside of this window. Doing so will result in you being terminated from the study.</span> 
+        We appreciate your understanding.
     </div>
 
     <button id="start-btn">BEGIN SECURE SESSION</button>
 
     <div id="loader-container">
         <div class="spinner"></div>
-        <p id="loader-text">Establishing secure feed...</p>
+        <p id="loader-text">ESTABLISHING SECURE FEED...</p>
     </div>
 
     <div id="video-container">
-        <video id="video" playsinline>
-            <source src="timeline1.mp4" type="video/mp4">
+        <video id="Timeline 1.mp4" playsinline>
+            <source src="Timeline 1.mp4" type="video/mp4">
         </video>
     </div>
 
@@ -111,7 +115,8 @@ video {
 
 <div id="terminated">
     <h1 style="color:red; font-size:3em;">SESSION TERMINATED</h1>
-    <p>Session ended.</p>
+    <p>Unauthorized activity or window focus change detected.</p>
+    <p>Access has been revoked.</p>
 </div>
 
 <script>
@@ -131,7 +136,6 @@ startBtn.addEventListener("click", () => {
         videoContainer.style.display = "block";
 
         video.muted = false;
-
         video.play().catch(err => console.log(err));
 
         enableSecurity();
@@ -141,7 +145,7 @@ startBtn.addEventListener("click", () => {
 video.addEventListener("ended", () => {
     videoContainer.style.display = "none";
 
-    loaderText.innerText = "Finalizing secure session...";
+    loaderText.innerText = "FINALIZING SECURE SESSION...";
     loader.style.display = "flex";
 
     setTimeout(() => {
