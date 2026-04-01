@@ -1,34 +1,181 @@
-const video = document.getElementById('v');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SECURE ASSET REVIEW SESSION</title>
 
-function startSession() {
-    document.getElementById('start-btn').style.display = 'none';
-    document.getElementById('loader-container').style.display = 'flex';
-
-    // Wait until video can actually play
-    video.oncanplay = () => {
-        document.getElementById('loader-container').style.display = 'none';
-        document.getElementById('video-container').style.display = 'block';
-
-        video.play().catch(e => console.log("Playback error:", e));
-
-        setTimeout(enableSecurity, 2000);
-    };
+<style>
+body {
+    background-color: white;
+    color: black;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 40px;
+    text-align: center;
 }
+
+.header-text {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 900px;
+    margin: 0 auto 20px;
+}
+
+.warning-text {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#start-btn {
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background: #eee;
+    border-radius: 5px;
+}
+
+/* Loader */
+#loader-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #2d5da7;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Video */
+#video-container {
+    display: none;
+    margin-top: 30px;
+}
+
+video {
+    width: 95%;
+    max-width: 1000px;
+    background: black;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
+}
+
+/* Termination screen */
+#terminated {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    text-align: center;
+    padding-top: 15%;
+}
+</style>
+</head>
+
+<body>
+
+<div id="main-content">
+
+    <div class="header-text">
+        For security reasons, once the video starts playing 
+        <span class="warning-text">please remain on this page and do not switch tabs or leave the window.</span> 
+        Doing so may terminate your session.
+    </div>
+
+    <button id="start-btn">BEGIN SECURE SESSION</button>
+
+    <div id="loader-container">
+        <div class="spinner"></div>
+        <p id="loader-text">Establishing secure feed...</p>
+    </div>
+
+    <div id="video-container">
+        <video id="video" playsinline>
+            <source src="timeline1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+</div>
+
+<div id="terminated">
+    <h1 style="color:red; font-size:3em;">SESSION TERMINATED</h1>
+    <p>Session ended.</p>
+</div>
+
+<script>
+const startBtn = document.getElementById("start-btn");
+const loader = document.getElementById("loader-container");
+const videoContainer = document.getElementById("video-container");
+const video = document.getElementById("video");
+const loaderText = document.getElementById("loader-text");
+
+startBtn.addEventListener("click", () => {
+
+    // Hide button, show loader
+    startBtn.style.display = "none";
+    loader.style.display = "flex";
+
+    // Simulated loading delay
+    setTimeout(() => {
+
+        loader.style.display = "none";
+        videoContainer.style.display = "block";
+
+        // Enable sound
+        video.muted = false;
+
+        // Play video
+        video.play().catch(err => {
+            console.log("Playback error:", err);
+        });
+
+        enableSecurity();
+
+    }, 2500);
+});
+
+// When video ends → show loader again
+video.addEventListener("ended", () => {
+
+    videoContainer.style.display = "none";
+
+    loaderText.innerText = "Finalizing secure session...";
+    loader.style.display = "flex";
+
+    // Optional: end session after a few seconds
+    setTimeout(() => {
+        terminate();
+    }, 4000);
+});
 
 function terminate() {
     video.pause();
-    document.getElementById('main-content').style.display = 'none';
-    document.getElementById('terminated').style.display = 'block';
+    document.getElementById("main-content").style.display = "none";
+    document.getElementById("terminated").style.display = "block";
 }
 
 function enableSecurity() {
     // Only terminate if user leaves tab
-    window.addEventListener('blur', terminate);
+    window.addEventListener("blur", terminate);
 
-    // MUCH softer mouse detection
-    let moveCount = 0;
-    window.addEventListener('mousemove', () => {
-        moveCount++;
-        if (moveCount > 50) terminate(); // allows normal movement
-    });
+    // Prevent right click (optional realism)
+    document.addEventListener("contextmenu", e => e.preventDefault());
 }
+</script>
+
+</body>
+</html>
