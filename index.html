@@ -2,17 +2,168 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Test Page</title>
+<title>Survey</title>
+
+<style>
+body {
+    background-color: white;
+    color: black;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 40px;
+}
+
+.header-text {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 900px;
+    margin-bottom: 20px;
+}
+
+.warning-text {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#start-btn {
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background: #eee;
+    border-radius: 5px;
+}
+
+/* Loader */
+#loader-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #2d5da7;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Video */
+#video-container {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+}
+
+video {
+    width: 95%;
+    max-width: 1000px;
+    background: black;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
+}
+
+/* Termination */
+#terminated {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    text-align: center;
+    padding-top: 15%;
+}
+</style>
 </head>
 
 <body>
 
-<h1>Site is working</h1>
-<p>If you see this, your HTML is fine.</p>
+<div id="main-content">
 
-<video controls width="600">
-    <source src="timeline1.mp4" type="video/mp4">
-</video>
+    <div class="header-text">
+        For security reasons, once the video starts playing 
+        <span class="warning-text">please do not use the keyboard, mouse, or click outside of this window. Doing so will result in you being terminated from the study.</span> 
+        We appreciate your understanding.
+    </div>
+
+    <button id="start-btn">BEGIN SECURE SESSION</button>
+
+    <div id="loader-container">
+        <div class="spinner"></div>
+        <p id="loader-text">ESTABLISHING SECURE FEED...</p>
+    </div>
+
+    <div id="video-container">
+        <video id="video" playsinline>
+            <source src="timeline1.mp4" type="video/mp4">
+        </video>
+    </div>
+
+</div>
+
+<div id="terminated">
+    <h1 style="color:red; font-size:3em;">SESSION TERMINATED</h1>
+    <p>Unauthorized activity or window focus change detected.</p>
+    <p>Access has been revoked.</p>
+</div>
+
+<script>
+const startBtn = document.getElementById("start-btn");
+const loader = document.getElementById("loader-container");
+const videoContainer = document.getElementById("video-container");
+const video = document.getElementById("video");
+const loaderText = document.getElementById("loader-text");
+
+startBtn.addEventListener("click", () => {
+
+    startBtn.style.display = "none";
+
+    // Show video immediately (important for Chrome)
+    videoContainer.style.display = "block";
+
+    // Play with sound (allowed because it's inside click)
+    video.play().catch(err => console.log(err));
+
+    // Show loader ON TOP
+    loader.style.display = "flex";
+
+    setTimeout(() => {
+        loader.style.display = "none";
+        enableSecurity();
+    }, 2500);
+});
+
+video.addEventListener("ended", () => {
+    videoContainer.style.display = "none";
+
+    loaderText.innerText = "FINALIZING SECURE SESSION...";
+    loader.style.display = "flex";
+
+    setTimeout(() => {
+        terminate();
+    }, 4000);
+});
+
+function terminate() {
+    video.pause();
+    document.getElementById("main-content").style.display = "none";
+    document.getElementById("terminated").style.display = "block";
+}
+
+function enableSecurity() {
+    window.addEventListener("blur", terminate);
+    document.addEventListener("contextmenu", e => e.preventDefault());
+}
+</script>
 
 </body>
 </html>
