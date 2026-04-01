@@ -1,50 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SECURE_SESSION_v7</title>
+    <title>SECURE_ASSET_REVIEW_v9</title>
     <style>
-        body { background-color: #fcfcfc; color: #333; font-family: Arial, sans-serif; margin: 0; padding: 20px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-        
-        .header-text { position: fixed; top: 20px; left: 20px; font-size: 16px; color: #000; text-align: left; max-width: 800px; }
+        /* White background and black text as seen in your image */
+        body { background-color: white; color: black; font-family: sans-serif; margin: 0; padding: 40px; overflow-x: hidden; }
+
+        /* The exact formatting: bold and underlined */
+        .header-text { font-size: 18px; line-height: 1.6; max-width: 1000px; margin-bottom: 30px; }
         .warning-text { font-weight: bold; text-decoration: underline; }
 
-        /* The Spinner from your image */
-        #loader-container { display: none; flex-direction: column; align-items: center; }
+        /* The loading circle container */
+        #loader-container { display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
         .spinner {
-            border: 10px solid #e0e0e0;
+            border: 10px solid #f3f3f3;
             border-top: 10px solid #2d5da7;
-            border-radius: 50%; width: 65px; height: 65px;
+            border-radius: 50%; width: 60px; height: 60px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* The Raw Video Player (No branding) */
-        #video-container { display: none; width: 100vw; height: 100vh; background: black; position: fixed; top: 0; left: 0; z-index: 100; }
-        video { width: 100%; height: 100%; object-fit: contain; }
-
-        /* Start Button - Looks like part of the study */
-        #start-btn { padding: 15px 30px; font-size: 18px; cursor: pointer; border: 1px solid #ccc; background: white; color: #333; }
+        /* The Video Player - centered below the text */
+        #video-container { display: none; width: 100%; text-align: center; }
+        video { width: 90%; max-width: 1000px; box-shadow: 0px 4px 15px rgba(0,0,0,0.3); }
 
         /* Termination Screen */
-        #terminated { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10000; text-align: center; padding-top: 15%; color: black; }
+        #terminated { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10000; text-align: center; padding-top: 15%; }
     </style>
 </head>
 <body>
 
     <div id="main-content">
         <div class="header-text">
-            Do not use your keyboard, mouse, or click outside of this window. Doing so will result in you being <span class="warning-text">terminated from the study.</span> We appreciate your understanding.
+            For security reasons, once the video starts playing <span class="warning-text">please do not use the keyboard, mouse, or click outside of this window. Doing so will result in you being terminated from the study.</span> We appreciate your understanding.
         </div>
 
-        <button id="start-btn" onclick="startSession()">BEGIN SECURE SESSION</button>
+        <!-- Start Button (Needed for sound to work) -->
+        <button id="start-btn" style="padding: 10px 20px; cursor: pointer; border: 1px solid #ccc; background: #eee;" onclick="startSession()">BEGIN SESSION</button>
 
-        <div id="loader-container">
+        <div id="loader-container" style="display: none;">
             <div class="spinner"></div>
-            <p>INITIALIZING FEED...</p>
+            <p>INITIALIZING SECURE FEED...</p>
         </div>
 
         <div id="video-container">
-            <!-- Points directly to your uploaded file -->
+            <!-- REMAINS ON SCREEN WITH TEXT ABOVE -->
             <video id="Timeline 1.mp4">
                 <source src="Timeline 1.mp4" type="video/mp4">
             </video>
@@ -52,27 +52,25 @@
     </div>
 
     <div id="terminated">
-        <h1>SESSION TERMINATED</h1>
-        <p>Security violation: Unauthorized input or focus change.</p>
+        <h1 style="color: red;">SESSION TERMINATED</h1>
+        <p>Security violation: Unauthorized input or focus change detected.</p>
     </div>
 
     <script>
         const video = document.getElementById('myVideo');
 
         function startSession() {
-            // Hide button, show loader
             document.getElementById('start-btn').style.display = 'none';
             document.getElementById('loader-container').style.display = 'flex';
 
-            // Wait 4 seconds (the loading circle time)
             setTimeout(() => {
                 document.getElementById('loader-container').style.display = 'none';
                 document.getElementById('video-container').style.display = 'block';
-                video.play(); // Plays with sound because of the click
+                video.play();
                 
-                // Start security AFTER video starts
+                // Security activates 1 second after video starts
                 setTimeout(enableSecurity, 1000);
-            }, 4000);
+            }, 3000);
         }
 
         function terminate() {
@@ -85,7 +83,6 @@
             window.onblur = terminate;
             window.onkeydown = terminate;
             window.onmousemove = function(e) {
-                // Allows a tiny bit of movement so they don't get kicked instantly
                 if (Math.abs(e.movementX) > 5 || Math.abs(e.movementY) > 5) terminate();
             };
         }
