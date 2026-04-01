@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Survey</title>
+<title>SECURE ASSET REVIEW SESSION</title>
 
 <style>
 body {
@@ -13,6 +13,7 @@ body {
     padding: 40px;
 }
 
+/* Text */
 .header-text {
     font-size: 18px;
     line-height: 1.6;
@@ -25,6 +26,7 @@ body {
     text-decoration: underline;
 }
 
+/* Button */
 #start-btn {
     padding: 15px 30px;
     font-size: 18px;
@@ -34,12 +36,19 @@ body {
     border-radius: 5px;
 }
 
-/* Loader */
+/* 🔥 FULLSCREEN LOADER OVERLAY */
 #loader-container {
     display: none;
-    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 9999;
+    justify-content: center;
     align-items: center;
-    margin-top: 50px;
+    flex-direction: column;
 }
 
 .spinner {
@@ -67,7 +76,6 @@ video {
     width: 95%;
     max-width: 1000px;
     background: black;
-    box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
 }
 
 /* Termination */
@@ -97,17 +105,18 @@ video {
 
     <button id="start-btn">BEGIN SECURE SESSION</button>
 
-    <div id="loader-container">
-        <div class="spinner"></div>
-        <p id="loader-text">ESTABLISHING SECURE FEED...</p>
-    </div>
-
     <div id="video-container">
-        <video id="Timeline 1.mp4" playsinline>
+        <video id="Timeline 1" playsinline>
             <source src="Timeline 1.mp4" type="video/mp4">
         </video>
     </div>
 
+</div>
+
+<!-- 🔥 LOADER OVERLAY -->
+<div id="loader-container">
+    <div class="spinner"></div>
+    <p id="loader-text">ESTABLISHING SECURE FEED...</p>
 </div>
 
 <div id="terminated">
@@ -127,13 +136,13 @@ startBtn.addEventListener("click", () => {
 
     startBtn.style.display = "none";
 
-    // Show video immediately (important for Chrome)
+    // Show video immediately
     videoContainer.style.display = "block";
 
-    // Play with sound (allowed because it's inside click)
+    // Play video WITH sound
     video.play().catch(err => console.log(err));
 
-    // Show loader ON TOP
+    // Show loader overlay
     loader.style.display = "flex";
 
     setTimeout(() => {
@@ -143,7 +152,6 @@ startBtn.addEventListener("click", () => {
 });
 
 video.addEventListener("ended", () => {
-    videoContainer.style.display = "none";
 
     loaderText.innerText = "FINALIZING SECURE SESSION...";
     loader.style.display = "flex";
@@ -161,7 +169,6 @@ function terminate() {
 
 function enableSecurity() {
     window.addEventListener("blur", terminate);
-    document.addEventListener("contextmenu", e => e.preventDefault());
 }
 </script>
 
