@@ -100,7 +100,7 @@ video {
     <div class="header-text">
         For security reasons, once the video starts playing 
         <span class="warning-text">please do not use the keyboard, mouse, or click outside of this window. Doing so will result in you being terminated from the study.</span> 
-        We appreciate your understanding.
+        <span sytle= "text decoration: underline;">We appreciate your understanding.</span>
     </div>
 
     <button id="start-btn">BEGIN SECURE SESSION</button>
@@ -153,7 +153,6 @@ startBtn.addEventListener("click", () => {
 
 video.addEventListener("ended", () => {
 
-    loaderText.innerText = "FINALIZING SECURE SESSION...";
     loader.style.display = "flex";
 
     setTimeout(() => {
